@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cook-Off Round 3 Voting Slips (120 Tickets)</title>
+<style>
+  @page {
+    size: letter portrait;
+    margin: 0.4in;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #111;
+    background: #fff;
+  }
+  
+  .no-print {
+    text-align: center;
+    padding: 16px;
+    background: #f1f5f9;
+    border-bottom: 1px solid #cbd5e1;
+  }
+  .btn {
+    background: #0f172a;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .sheet {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 8px;
+    width: 100%;
+    height: 10.2in;
+    page-break-after: always;
+    padding-bottom: 4px;
+  }
+  .sheet:last-child {
+    page-break-after: auto;
+  }
+
+  .ticket {
+    border: 1.5px dashed #94a3b8;
+    border-radius: 8px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: #fff;
+  }
+  .ticket h4 {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    margin-bottom: 2px;
+  }
+  .qr-box {
+    width: 80px;
+    height: 80px;
+    margin: 2px 0;
+  }
+  .qr-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .token-label {
+    font-size: 0.65rem;
+    color: #64748b;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .token-code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.25rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #0f172a;
+    line-height: 1.1;
+  }
+
+  @media print {
+    .no-print {
+      display: none;
+    }
+    body {
+      background: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="no-print">
+  <button class="btn" onclick="window.print()">🖨️ Print 120 Voting Slips</button>
+  <p style="font-size: 0.85rem; color: #64748b; margin-top: 6px;">5 Pages Total &bull; 24 Tickets Per Page</p>
+</div>
+
+<div id="container"></div>
+
+<script>
+var TOKENS = [
+  "1347", "1492", "1538", "1671", "1726", "1840", "1965", "2018", "2143", "2279",
+  "2315", "2486", "2531", "2694", "2750", "2816", "2942", "3078", "3124", "3269",
+  "3381", "3417", "3592", "3648", "3705", "3861", "3927", "4053", "4189", "4236",
+  "4371", "4418", "4562", "4697", "4730", "4856", "4912", "5047", "5183", "5229",
+  "5374", "5410", "5568", "5693", "5738", "5842", "5907", "6034", "6179", "6215",
+  "6380", "6426", "6571", "6608", "6743", "6897", "6951", "7086", "7132", "7268",
+  "7304", "7459", "7581", "7627", "7793", "7840", "7915", "8062", "8197", "8243",
+  "8309", "8475", "8520", "8664", "8719", "8853", "8908", "9035", "9170", "9216",
+  "9382", "9427", "9563", "9609", "9745", "9891", "9936", "1084", "1238", "1470",
+  "1625", "1859", "2190", "2346", "2581", "2714", "2968", "3157", "3320", "3546",
+  "3782", "3914", "4128", "4365", "4591", "4768", "4983", "5127", "5369", "5504",
+  "5741", "5986", "6140", "6375", "6519", "6784", "6920", "7514", "8432", "9126"
+];
+
+var QR_SRC = "Untitled design.png"; 
+
+var container = document.getElementById("container");
+var perPage = 24;
+var totalPages = Math.ceil(TOKENS.length / perPage);
+
+for (var p = 0; p < totalPages; p++) {
+  var sheet = document.createElement("div");
+  sheet.className = "sheet";
+
+  var pageTokens = TOKENS.slice(p * perPage, (p + 1) * perPage);
+
+  pageTokens.forEach(function(tok) {
+    var ticket = document.createElement("div");
+    ticket.className = "ticket";
+    ticket.innerHTML = `
+      <h4>Round 3 Ballot</h4>
+      <div class="qr-box">
+        <img src="${QR_SRC}" alt="Scan to Vote" onerror="this.onerror=null; this.src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://kevin-lei-bcm.github.io/cookoff/';">
+      </div>
+      <div class="token-label">Voting Token</div>
+      <div class="token-code">${tok}</div>
+    `;
+    sheet.appendChild(ticket);
+  });
+
+  container.appendChild(sheet);
+}
+</script>
+</body>
+</html>
